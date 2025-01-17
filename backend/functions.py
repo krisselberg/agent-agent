@@ -15,6 +15,9 @@ from openai import AsyncOpenAI
 
 openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 replicate_client = replicate.Client(api_token=os.getenv("REPLICATE_API_TOKEN"))
+kris_replicate_client = replicate.Client(
+    api_token=os.getenv("KRIS_REPLICATE_API_TOKEN")
+)
 
 
 character_map = {
@@ -171,25 +174,40 @@ class VideoGeneration:
 
         model_version = character_map[character_id]
 
-        # Create prediction with Replicate API
-        output = replicate_client.run(
-            model_version,
-            input={
-                "prompt": prompt,
-                "model": "dev",
-                "go_fast": False,
-                "lora_scale": 1,
-                "megapixels": "1",
-                "num_outputs": 1,
-                "aspect_ratio": "1:1",
-                "output_format": "webp",
-                "guidance_scale": 3,
-                "output_quality": 80,
-                "prompt_strength": 0.8,
-                "extra_lora_scale": 1,
-                "num_inference_steps": 28,
-            },
-        )
+        if character_id == "kris":
+            output = kris_replicate_client.run(
+                model_version,
+                input={
+                    "prompt": prompt,
+                    "model": "dev",
+                    "go_fast": False,
+                    "lora_scale": 1,
+                    "megapixels": "1",
+                    "num_outputs": 1,
+                    "aspect_ratio": "1:1",
+                    "output_format": "webp",
+                    "guidance_scale": 3,
+                },
+            )
+        else:
+            output = replicate_client.run(
+                model_version,
+                input={
+                    "prompt": prompt,
+                    "model": "dev",
+                    "go_fast": False,
+                    "lora_scale": 1,
+                    "megapixels": "1",
+                    "num_outputs": 1,
+                    "aspect_ratio": "1:1",
+                    "output_format": "webp",
+                    "guidance_scale": 3,
+                    "output_quality": 80,
+                    "prompt_strength": 0.8,
+                    "extra_lora_scale": 1,
+                    "num_inference_steps": 28,
+                },
+            )
 
         # Replicate returns a list with one URL for num_outputs=1
         image_url = output[0]
