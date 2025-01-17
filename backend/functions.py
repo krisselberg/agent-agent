@@ -22,10 +22,11 @@ character_map = {
     "sbg": "tharunkumartk/flux-sbg:8c17c2b0433859b461146c992548514100ef34be279bc6e72f55f7c3549016f0",
     "eleceed": "tharunkumartk/flux-eleceed:8e67f6038d53f6afbac83d2320e1851b7e582c93f4edc49536c8b2e924976a19",
     "snape": "tharunkumartk/snape:3a21251a6fb91b493e8623a1edecd3d544699fe0e47a525851b563c4e5e0ab14",
-    "draco": "tharunkumartk/draco:98d6b20c",
-    "samay": "tharunkumartk/samay-personal:15d25eb4",
-    "will": "tharunkumartk/will-personal:5b8485e6",
-    "tharun": "tharunkumartk/personal-flux:18081e54",
+    "draco": "tharunkumartk/draco:98d6b20cc574e88f3a693ae0d436a01bf4b7e4e369187b32d38b2082ebd15e53",
+    "samay": "tharunkumartk/samay-personal:15d25eb4f9e8b93827697d438ecb9bbae9ff7c4f16a003cf48f761a8231c96d5",
+    "will": "tharunkumartk/will-personal:5b8485e6b93c6f17e513ccdbc9b02a6c3beb252f4fc486f7027df2359468d34d",
+    "tharun": "tharunkumartk/personal-flux:18081e54cb57bbefbe36826f9bf4c7cd525039404b119aee5b0aed318136f987",
+    "kris": "krisselberg/flux-kris:66fa1c3a480955332709aa7837e094b9a2184ead53aa14353ba073e1b92a9f38",
 }
 
 
@@ -200,13 +201,12 @@ class VideoGeneration:
         image_dir = Path(f"output/{self.video_id}/images")
         image_dir.mkdir(parents=True, exist_ok=True)
 
-        # Generate images for each scene
-        image_urls = []
-        for i, scene in enumerate(scene_prompts):
-            image_url = await self.generate_image(
-                scene.image_prompt, scene.character_id
-            )
-            image_urls.append(image_url)
+        # Generate all images concurrently
+        image_tasks = [
+            self.generate_image(scene.image_prompt, scene.character_id)
+            for scene in scene_prompts
+        ]
+        image_urls = await asyncio.gather(*image_tasks)
 
         self._update_status("generating_images", 45, image_paths=image_urls)
         return image_urls
