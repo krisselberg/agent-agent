@@ -1,85 +1,15 @@
 {
   "video_id": "test_video_123",
-  "status": "completed",
-  "progress": 100,
+  "status": "initialized",
+  "progress": 0,
   "steps_completed": [],
   "error": null,
   "generated_content": {
-    "story_description": "In a world where snacks reign supreme, Char1, an overzealous potato chip inventor, and Char2, an aspiring soda flavorologist, team up to create the ultimate party snack: the \"Choco-Pop-Taco Crunch!\" Their quest leads them to the zaniest corners of Snacktopia, where they encounter a gang of rebellious gummy bears, a wise old pretzel sage, and a mystical vending machine that only dispenses expired candy. With their hilariously disastrous experiments and a series of culinary faceplants, will they conquer the Snack Olympics and win the coveted Golden Snack Award, or will they end up as the laughingstock of the snack world? Get ready for a crunch-tastic adventure filled with laughs, ridiculous inventions, and snacks that will leave you questioning your lunch!",
-    "scene_prompts": [
-      {
-        "image_prompt": "Char1 in a lab covered in crumbs, holding a giant potato chip with googly eyes.",
-        "character_id": "char1",
-        "dialogue": "Eureka! This chip is a snack-tastrophe waiting to happen!"
-      },
-      {
-        "image_prompt": "Char2 juggling soda cans while trying to mix flavors in a crazy machine.",
-        "character_id": "char2",
-        "dialogue": "If I can just combine cola and pickle juice, we'll be snack royalty!"
-      },
-      {
-        "image_prompt": "A gang of gummy bears wearing leather jackets, doing a dance-off.",
-        "character_id": "char1",
-        "dialogue": "Don't gummy bears know we're here for the Golden Snack Award?!"
-      },
-      {
-        "image_prompt": "A wise old pretzel sage sitting on a throne made of pretzels, handing out sage advice.",
-        "character_id": "char2",
-        "dialogue": "Oh wise Pretzel, what's your secret for crunch perfection?"
-      },
-      {
-        "image_prompt": "A mystical vending machine with a light shining from it, surrounded by expired candy wrappers.",
-        "character_id": "char1",
-        "dialogue": "Should we risk it for the expired gummy worms? It could be genius or disaster!"
-      },
-      {
-        "image_prompt": "Char1 and Char2 covered in toppings after a disastrous cooking attempt, looking hilariously defeated.",
-        "character_id": "char2",
-        "dialogue": "We just invented a new snack: \u2018Choco-Pop-Taco Mess\u2019!"
-      },
-      {
-        "image_prompt": "Char1 and Char2 presenting their creation at the Snack Olympics, looking nervous.",
-        "character_id": "char1",
-        "dialogue": "Ladies and Gentlemen, behold the 'Choco-Pop-Taco Crunch'... I think!"
-      },
-      {
-        "image_prompt": "The crowd laughing as Char1 and Char2 look shocked at the taste test results.",
-        "character_id": "char2",
-        "dialogue": "We may not win the award, but we\u2019re definitely winning a comedy show!"
-      }
-    ],
-    "image_paths": [
-      "output/test_video_123/images/scene_0.png",
-      "output/test_video_123/images/scene_1.png",
-      "output/test_video_123/images/scene_2.png",
-      "output/test_video_123/images/scene_3.png",
-      "output/test_video_123/images/scene_4.png",
-      "output/test_video_123/images/scene_5.png",
-      "output/test_video_123/images/scene_6.png",
-      "output/test_video_123/images/scene_7.png"
-    ],
-    "audio_paths": [
-      "output/test_video_123/audio/scene_0.mp3",
-      "output/test_video_123/audio/scene_1.mp3",
-      "output/test_video_123/audio/scene_2.mp3",
-      "output/test_video_123/audio/scene_3.mp3",
-      "output/test_video_123/audio/scene_4.mp3",
-      "output/test_video_123/audio/scene_5.mp3",
-      "output/test_video_123/audio/scene_6.mp3",
-      "output/test_video_123/audio/scene_7.mp3"
-    ],
-    "video_paths": [
-      "output/test_video_123/videos/scene_0.mp4",
-      "output/test_video_123/videos/scene_1.mp4",
-      "output/test_video_123/videos/scene_2.mp4",
-      "output/test_video_123/videos/scene_3.mp4",
-      "output/test_video_123/videos/scene_4.mp4",
-      "output/test_video_123/videos/scene_5.mp4",
-      "output/test_video_123/videos/scene_6.mp4",
-      "output/test_video_123/videos/scene_7.mp4"
-    ],
-    "final_video_path": "output/test_video_123/final/final_video.mp4",
-    "story_description_prompt": "In a world where snacks reign supreme, Char1, an overzealous potato chip inventor, and Char2, an aspiring soda flavorologist, team up to create the ultimate party snack: the \"Choco-Pop-Taco Crunch!\" Their quest leads them to the zaniest corners of Snacktopia, where they encounter a gang of rebellious gummy bears, a wise old pretzel sage, and a mystical vending machine that only dispenses expired candy. With their hilariously disastrous experiments and a series of culinary faceplants, will they conquer the Snack Olympics and win the coveted Golden Snack Award, or will they end up as the laughingstock of the snack world? Get ready for a crunch-tastic adventure filled with laughs, ridiculous inventions, and snacks that will leave you questioning your lunch!",
-    "scene_prompts_prompt": "{\n    \"data\":[\n        {\n            \"image_prompt\": \"Char1 in a lab covered in crumbs, holding a giant potato chip with googly eyes.\",\n            \"character_id\": \"char1\",\n            \"dialogue\": \"Eureka! This chip is a snack-tastrophe waiting to happen!\"\n        },\n        {\n            \"image_prompt\": \"Char2 juggling soda cans while trying to mix flavors in a crazy machine.\",\n            \"character_id\": \"char2\",\n            \"dialogue\": \"If I can just combine cola and pickle juice, we'll be snack royalty!\"\n        },\n        {\n            \"image_prompt\": \"A gang of gummy bears wearing leather jackets, doing a dance-off.\",\n            \"character_id\": \"char1\",\n            \"dialogue\": \"Don't gummy bears know we're here for the Golden Snack Award?!\"\n        },\n        {\n            \"image_prompt\": \"A wise old pretzel sage sitting on a throne made of pretzels, handing out sage advice.\",\n            \"character_id\": \"char2\",\n            \"dialogue\": \"Oh wise Pretzel, what's your secret for crunch perfection?\"\n        },\n        {\n            \"image_prompt\": \"A mystical vending machine with a light shining from it, surrounded by expired candy wrappers.\",\n            \"character_id\": \"char1\",\n            \"dialogue\": \"Should we risk it for the expired gummy worms? It could be genius or disaster!\"\n        },\n        {\n            \"image_prompt\": \"Char1 and Char2 covered in toppings after a disastrous cooking attempt, looking hilariously defeated.\",\n            \"character_id\": \"char2\",\n            \"dialogue\": \"We just invented a new snack: \u2018Choco-Pop-Taco Mess\u2019!\"\n        },\n        {\n            \"image_prompt\": \"Char1 and Char2 presenting their creation at the Snack Olympics, looking nervous.\",\n            \"character_id\": \"char1\",\n            \"dialogue\": \"Ladies and Gentlemen, behold the 'Choco-Pop-Taco Crunch'... I think!\"\n        },\n        {\n            \"image_prompt\": \"The crowd laughing as Char1 and Char2 look shocked at the taste test results.\",\n            \"character_id\": \"char2\",\n            \"dialogue\": \"We may not win the award, but we\u2019re definitely winning a comedy show!\"\n        }\n    ]\n}"
+    "story_description": null,
+    "scene_prompts": [],
+    "image_paths": [],
+    "audio_paths": [],
+    "video_paths": [],
+    "final_video_path": null
   }
 }

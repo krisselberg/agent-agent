@@ -5,6 +5,7 @@ import asyncio
 from dotenv import load_dotenv
 from class_types import ScenePrompt, Character, SceneDescription
 from pathlib import Path
+import replicate
 
 # Load environment variables
 load_dotenv()
@@ -13,6 +14,19 @@ from openai import AsyncOpenAI
 
 
 openai_client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+replicate_client = replicate.Client(api_token=os.getenv("REPLICATE_API_TOKEN"))
+
+
+character_map = {
+    "marionetta": "tharunkumartk/flux-marionetta:bbf2195b8e08319ba49dcc47275ec6a2e6e840763bf179c644db45235ae686a6",
+    "sbg": "tharunkumartk/flux-sbg:8c17c2b0433859b461146c992548514100ef34be279bc6e72f55f7c3549016f0",
+    "eleceed": "tharunkumartk/flux-eleceed:8e67f6038d53f6afbac83d2320e1851b7e582c93f4edc49536c8b2e924976a19",
+    "snape": "tharunkumartk/snape:3a21251a6fb91b493e8623a1edecd3d544699fe0e47a525851b563c4e5e0ab14",
+    "draco": "tharunkumartk/draco:98d6b20c",
+    "samay": "tharunkumartk/samay-personal:15d25eb4",
+    "will": "tharunkumartk/will-personal:5b8485e6",
+    "tharun": "tharunkumartk/personal-flux:18081e54",
+}
 
 
 class VideoGeneration:
@@ -149,18 +163,53 @@ class VideoGeneration:
         )
         return scene_prompts
 
+    async def generate_image(self, prompt: str, character_id: str) -> str:
+        """Generate a single image using Replicate API for a given character and prompt"""
+        if character_id not in character_map:
+            raise ValueError(f"Invalid character ID: {character_id}")
+
+        model_version = character_map[character_id]
+
+        # Create prediction with Replicate API
+        output = replicate_client.run(
+            model_version,
+            input={
+                "prompt": prompt,
+                "model": "dev",
+                "go_fast": False,
+                "lora_scale": 1,
+                "megapixels": "1",
+                "num_outputs": 1,
+                "aspect_ratio": "1:1",
+                "output_format": "webp",
+                "guidance_scale": 3,
+                "output_quality": 80,
+                "prompt_strength": 0.8,
+                "extra_lora_scale": 1,
+                "num_inference_steps": 28,
+            },
+        )
+
+        # Replicate returns a list with one URL for num_outputs=1
+        image_url = output[0]
+        return image_url
+
     async def get_images(self, scene_prompts: List[ScenePrompt]) -> List[str]:
         """Generate images for each scene prompt"""
         self._update_status("generating_images", 40)
         image_dir = Path(f"output/{self.video_id}/images")
         image_dir.mkdir(parents=True, exist_ok=True)
 
-        await asyncio.sleep(2)  # Simulate async image generation
-        image_paths = [
-            str(image_dir / f"scene_{i}.png") for i in range(len(scene_prompts))
-        ]
-        self._update_status("generating_images", 45, image_paths=image_paths)
-        return image_paths
+        # Generate images for each scene
+        image_urls = []
+        for i, scene in enumerate(scene_prompts):
+            image_url = await self.generate_image(
+                scene.image_prompt, scene.character_id
+            )
+            image_urls.append(image_url)
+
+        self._update_status("generating_images", 45, image_paths=image_urls)
+        return image_urls
 
     async def get_audios(self, scene_prompts: List[ScenePrompt]) -> List[str]:
         """Generate audio for each scene prompt"""
