@@ -79,15 +79,20 @@ class VideoGeneration:
                     "content": "Generate a really cool and funny story description for the characters "
                     + str(self.character_ids)
                     + " in a video about "
-                    + description,
+                    + description
+                    + "Make sure that you ONLY output the story description. DO NOT INCLUDE ANYTHING ELSE.",
                 }
             ],
+            temperature=0.9,
         )
         story_description = SceneDescription(
             description=response.choices[0].message.content
         )
         self._update_status(
-            "generating_story", 15, story_description=story_description.description
+            "generating_story",
+            15,
+            story_description=story_description.description,
+            story_description_prompt=response.choices[0].message.content,
         )
         return story_description
 
@@ -96,19 +101,51 @@ class VideoGeneration:
     ) -> List[ScenePrompt]:
         """Generate a list of scenes from the story description"""
         self._update_status("generating_scenes", 20)
-        await asyncio.sleep(1)
-        # TODO: Implement actual scene generation
+        system_prompt = """
+        You are a helpful assistant that generates scenes for a generated video. Make the scenes funny, and follow the story description given by the user. Your output will be a JSON list of 7-8 scenes in the following format:
+
+        {
+            "data":[
+                {
+                    "image_prompt": "A prompt for the image",
+                    "character_id": "The ID of the character",
+                    "dialogue": "The dialogue for the scene"
+                }
+            ]
+        }
+
+        
+        Make sure you are extremely creative, dramatic, and CONCISE. It is crucuial that you keep the dialogue concise and to the point. MAKE SURE YOU ONLY INCLUDE CHARACTERS THAT ARE IN THE AVAILABLE CHARACTERS LIST.
+        """
+
+        user_prompt = f"""
+        Story description: {story_description.description}
+        Available characters: {self.character_ids}
+        """
+
+        response = await openai_client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            temperature=0.9,
+        )
+
+        scene_prompts = json.loads(response.choices[0].message.content)["data"]
         scene_prompts = [
             ScenePrompt(
-                image_prompt="Placeholder image prompt",
-                character_id=self.character_ids[0],
-                dialogue="Placeholder dialogue",
+                image_prompt=scene["image_prompt"],
+                character_id=scene["character_id"],
+                dialogue=scene["dialogue"],
             )
+            for scene in scene_prompts
         ]
         self._update_status(
             "generating_scenes",
             25,
             scene_prompts=[scene.dict() for scene in scene_prompts],
+            scene_prompts_prompt=response.choices[0].message.content,
         )
         return scene_prompts
 

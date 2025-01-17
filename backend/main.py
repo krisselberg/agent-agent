@@ -4,8 +4,12 @@ import json
 from pathlib import Path
 from pydantic import BaseModel
 from typing import List
+import asyncio
 
 app = FastAPI()
+
+# Store video generation objects in memory
+video_generations = {}
 
 
 class CreateVideoRequest(BaseModel):
@@ -19,37 +23,18 @@ class CreateAgentRequest(BaseModel):
     pass
 
 
-@app.post("/create_agent", status_code=201)
-async def create_agent(request: CreateAgentRequest):
-    try:
-        # Here you would typically process the data and create an agent
-        return {
-            "status": "success",
-            "message": "Agent created successfully",
-            "data": request.dict(),
-        }
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
-
-
 @app.get("/video/{video_id}/status")
 async def get_video_status(video_id: str):
     try:
-        status_file = Path(f"statuses/{video_id}.json")
-        if not status_file.exists():
+        if video_id not in video_generations:
             raise HTTPException(status_code=404, detail="Video ID not found")
 
-        with open(status_file, "r") as f:
-            status = json.load(f)
+        video_gen = video_generations[video_id]
+        status = video_gen._get_status()
 
-        return {
-            "status": "success",
-            "video_id": video_id,
-            "video_status": status["status"],
-            "progress": status["progress"],
-        }
-    except HTTPException as he:
-        raise he
+        return status
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Video ID not found")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -57,20 +42,22 @@ async def get_video_status(video_id: str):
 @app.post("/video", status_code=201)
 async def create_video(request: CreateVideoRequest):
     try:
-        # Create and start video generation job
-        video_gen = VideoGeneration(request.video_id, request.character_ids)
-
-        # Start the generation process asynchronously
-        final_video_path = await video_gen.generate_video(
-            description=request.description
+        # Create video generation instance
+        video_gen = VideoGeneration(
+            request.video_id, request.character_ids, request.description
         )
 
+        # Store in map
+        video_generations[request.video_id] = video_gen
+
+        # Start the generation process in the background
+        asyncio.create_task(video_gen.generate_video())
+
+        # Return immediately with the video ID
         return {
             "status": "success",
             "message": "Video creation initiated",
             "video_id": request.video_id,
-            "character_ids": request.character_ids,
-            "description": request.description,
         }
 
     except Exception as e:
