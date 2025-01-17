@@ -174,39 +174,31 @@ class VideoGeneration:
 
         model_version = character_map[character_id]
 
+        params = {
+            "prompt": prompt,
+            "model": "dev",
+            "go_fast": False,
+            "lora_scale": 1,
+            "megapixels": "1",
+            "num_outputs": 1,
+            "aspect_ratio": "3:4",
+            "output_format": "png",
+            "guidance_scale": 3,
+            "output_quality": 80,
+            "prompt_strength": 0.8,
+            "extra_lora_scale": 1,
+            "num_inference_steps": 28,
+        }
+
         if character_id == "kris":
             output = kris_replicate_client.run(
                 model_version,
-                input={
-                    "prompt": prompt,
-                    "model": "dev",
-                    "go_fast": False,
-                    "lora_scale": 1,
-                    "megapixels": "1",
-                    "num_outputs": 1,
-                    "aspect_ratio": "1:1",
-                    "output_format": "webp",
-                    "guidance_scale": 3,
-                },
+                input=params,
             )
         else:
             output = replicate_client.run(
                 model_version,
-                input={
-                    "prompt": prompt,
-                    "model": "dev",
-                    "go_fast": False,
-                    "lora_scale": 1,
-                    "megapixels": "1",
-                    "num_outputs": 1,
-                    "aspect_ratio": "1:1",
-                    "output_format": "webp",
-                    "guidance_scale": 3,
-                    "output_quality": 80,
-                    "prompt_strength": 0.8,
-                    "extra_lora_scale": 1,
-                    "num_inference_steps": 28,
-                },
+                input=params,
             )
 
         # Replicate returns a list with one URL for num_outputs=1
